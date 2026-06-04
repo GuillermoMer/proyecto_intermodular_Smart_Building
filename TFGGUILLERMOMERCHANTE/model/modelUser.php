@@ -13,7 +13,7 @@ class UserModel {
     }
 
     public function comprobarUser($email, $pass) {
-        $sql= 'SELECT email FROM usuarios WHERE email=:email AND password=:pass';
+        $sql= 'SELECT email FROM USUARIOS WHERE email=:email AND password=:pass';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':pass', $pass);
@@ -23,7 +23,7 @@ class UserModel {
 
     public function comprobarRol($email) {
 
-        $sql= 'SELECT ID_ROL FROM usuarios WHERE EMAIL=:email';
+        $sql= 'SELECT ID_ROL FROM USUARIOS WHERE EMAIL=:email';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -32,7 +32,7 @@ class UserModel {
     }
 
     public function usuario($email){
-        $sql='SELECT NOMBRE FROM usuarios WHERE EMAIL= :email';
+        $sql='SELECT NOMBRE FROM USUARIOS WHERE EMAIL= :email';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -40,7 +40,7 @@ class UserModel {
     }
 
     public function mostrarUsuarios($rol){
-        $sql= 'SELECT EMAIL, NOMBRE, APELLIDOS, ID_ROL FROM usuarios WHERE ID_ROL >= :rol';
+        $sql= 'SELECT EMAIL, NOMBRE, APELLIDOS, ID_ROL FROM USUARIOS WHERE ID_ROL >= :rol';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':rol', $rol);
         $stmt->execute();
@@ -54,7 +54,7 @@ class UserModel {
         if(empty($rol)||$rol==1){
             $rol=3;
         }
-        $sqlC= 'SELECT COUNT(*) FROM usuarios WHERE EMAIL = :email';
+        $sqlC= 'SELECT COUNT(*) FROM USUARIOS WHERE EMAIL = :email';
         $stmtC = $this->conexionDB->prepare($sqlC);  
         $stmtC->bindParam(':email', $email);
         $stmtC->execute();
@@ -62,7 +62,7 @@ class UserModel {
         if ($existe > 0) {
             return;
         }
-        $sql= 'INSERT INTO usuarios (EMAIL, NOMBRE, APELLIDOS, PASSWORD, ID_ROL) VALUES (:email, :nombre, :apellidos, :password, :rol)';
+        $sql= 'INSERT INTO USUARIOS (EMAIL, NOMBRE, APELLIDOS, PASSWORD, ID_ROL) VALUES (:email, :nombre, :apellidos, :password, :rol)';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':nombre', $nombre);
@@ -103,7 +103,7 @@ class UserModel {
         if($rol==1 &&$actual['ID_ROL']!==1){ 
            return;
         }
-        $sql= 'UPDATE usuarios SET NOMBRE = :nombre, APELLIDOS = :apellidos, PASSWORD = :password, ID_ROL = :rol WHERE EMAIL = :email';
+        $sql= 'UPDATE USUARIOS SET NOMBRE = :nombre, APELLIDOS = :apellidos, PASSWORD = :password, ID_ROL = :rol WHERE EMAIL = :email';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':nombre', $nombre);
@@ -114,7 +114,7 @@ class UserModel {
     }
 
     public function borrar($email){
-        $sql = 'DELETE FROM usuarios WHERE EMAIL = :email';
+        $sql = 'DELETE FROM USUARIOS WHERE EMAIL = :email';
         $stmt = $this->conexionDB->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();

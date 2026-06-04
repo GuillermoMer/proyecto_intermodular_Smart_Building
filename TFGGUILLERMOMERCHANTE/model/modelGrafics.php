@@ -27,7 +27,7 @@ class GraficModel {
     }
 
     public function verEstancias(){
-        $sql="SELECT COD_EST FROM estancias ORDER BY COD_EST";
+        $sql="SELECT COD_EST FROM ESTANCIAS ORDER BY COD_EST";
         $stmt = $this->conexion->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
