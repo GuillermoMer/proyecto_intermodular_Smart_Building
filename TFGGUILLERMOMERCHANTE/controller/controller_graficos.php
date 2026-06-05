@@ -72,7 +72,7 @@
             require_once ROOT . 'views/graphics.php';
         }
 
-        public function users(){
+        public function users(){ 
             $rol=$this->rolActual();
             $usermodel= new UserModel();
             $usuarios = $usermodel->mostrarUsuarios($rol); 
@@ -121,6 +121,7 @@
             $apellidos = $_POST['apellidos'];
             $password = $_POST['password'];
             if(strlen($password)<8){
+                header('Location: ./index.php?action=home&error=registro');
                 return;
             }
             $contraSegura= password_hash($password, PASSWORD_ARGON2ID);

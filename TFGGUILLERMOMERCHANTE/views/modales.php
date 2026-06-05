@@ -174,7 +174,7 @@
                     <input type="email" name="email" id="email" placeholder="EMAIL" required><br><br>
                     <input type="text" name="nombre" id="nombre" placeholder="NOMBRE" required><br><br>
                     <input type="text" name="apellidos" id="apellidos" placeholder="APELLIDO" required><br><br>
-                    <input type="password" name="password" id="password" placeholder="CONTRASEÑA" required><br><br>
+                    <input type="password" name="password" id="password" minlength="8" placeholder="CONTRASEÑA" required><br><br>
                 </div>    
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
