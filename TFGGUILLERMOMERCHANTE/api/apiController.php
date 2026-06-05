@@ -1,7 +1,7 @@
 <?php
-    require_once './class/user.php';
-    require_once './model/modelGrafics.php';
-    require_once './controller/controller_graficos.php';
+    require_once ROOT . 'class/user.php';
+    require_once ROOT . 'model/modelGrafics.php';
+    require_once ROOT . 'controller/controller_graficos.php';
     class ApiController{
 
         public function extraerApi(){
@@ -19,7 +19,7 @@
             header("Content-Type: application/json");
             echo json_encode($obtener, JSON_PRETTY_PRINT);
 
-        } 
+        }
 
         //FUNCIONES PARA GRAFICA RADIADORES 
         public function radiadores(){
