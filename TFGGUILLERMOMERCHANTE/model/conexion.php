@@ -10,19 +10,9 @@ class ConectarDB {
         if(self::$conexion===null){
             try {
                 // Crear la conexión PDO
-				$host     = "PMYSQL202.dns-servicio.com:3306"; 
-                $port     = "3306";
-				$dbname   = "11407392_smartbuilding"; 
-                $user     = "GuillermoMerchanteAlbacete";          
-                $password = "Guillermo1+234"; 
-                $charset  = "utf8";
-				
-				// Construimos el DSN apuntando localmente
-                $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=$charset";
-
-                // Crear la conexión PDO con las credenciales reales
-                self::$conexion = new PDO($dsn, $user, $password);
-                self:
+                self::$conexion = new PDO("mysql:host=localhost;dbname=smartbuilding;charset=utf8", "root", "");
+                self::$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               
             } catch (PDOException $e) {
                 die("Error al conectar con la base de datos: " . $e->getMessage());
             }
