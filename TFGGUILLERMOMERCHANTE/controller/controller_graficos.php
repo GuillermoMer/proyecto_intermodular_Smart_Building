@@ -1,8 +1,8 @@
 <?php
- require_once './class/user.php';
- require_once './model/modelGrupo.php';
- require_once './model/modelUser.php';
- require_once './model/modelGrafics.php';
+ require_once ROOT . 'class/user.php';
+ require_once ROOT . 'model/modelGrupo.php';
+ require_once ROOT . 'model/modelUser.php';
+ require_once ROOT . 'model/modelGrafics.php';
 
     class GraficosController{
 
@@ -31,7 +31,7 @@
             $pass = $_POST['pass'] ?? $_GET['pass'] ?? null;
 
             if (empty($email) || empty($pass)) {
-                header('Location: ./index.php?action=home&error=credenciales');
+                header('Location: /index.php?action=home&error=credenciales');
                 return;
             }
             //$hash = password_hash($pass, PASSWORD_ARGON2ID);
@@ -39,27 +39,28 @@
             $usuarioEntidad = $usuarioModel->obtenerUsuarioEntidad($email, $pass); 
 
             if (!$usuarioEntidad) {
-                header('Location: ./index.php?action=home&error=invalidas');
+                header('Location: /index.php?action=home&error=invalidas');
                 return;
             }
 
             $_SESSION['usuario_obj'] = serialize($usuarioEntidad);
         //tanto al iniciar sesion como al registrarse el usuario será enviado a su perfil
 
-            header('Location: ./index.php?action=perfil');
+            header('Location: /index.php?action=perfil');
             exit;
         }
 
         public function nuevoGrupo(){
             $grupoModel= new GrupoModel();
             $grupoModel->crearGrupo($_POST['nombre'], $_POST['estancia'], $_POST['desc'] , $this->usuarioActual()->getMail());
-            header('Location: ./index.php?action=perfil');
+            header('Location: /index.php?action=perfil');
+			exit;
         }
     
         public function home(){
             $graficsModel= new GraficModel();
             $tempes=$graficsModel->verTempe(); 
-            require_once './views/home.php';
+            require_once ROOT . 'views/home.php';
         }
 
         public function grafic(){
@@ -68,21 +69,21 @@
             $grupoModel = new GrupoModel();
             $grupos=$grupoModel->getGruposPorUsuario($this->usuarioActual()->getMail()); 
 
-            require_once './views/graphics.php';
+            require_once ROOT . 'views/graphics.php';
         }
 
         public function users(){
             $rol=$this->rolActual();
             $usermodel= new UserModel();
             $usuarios = $usermodel->mostrarUsuarios($rol); 
-            require_once './views/users.php';
+            require_once ROOT . 'views/users.php';
         }
 
         public function tempe(){
             $graficsModel= new GraficModel();
             $aulas = $graficsModel->verAulas();
             $estancias= $graficsModel->verEstancias();
-            require_once './views/confort.php';
+            require_once ROOT . 'views/confort.php';
         }
 
 
@@ -93,7 +94,7 @@
             $grupos = $grupoModel->getGruposPorUsuario($this->usuarioActual()->getMail());
             $estancias=$graficsModel->verEstancias();
             $ver = $userModel->usuario($this->usuarioActual()->getMail());
-            require_once './views/profile.php';
+            require_once ROOT . 'views/profile.php';
         }
 
         public function crear(){
@@ -109,7 +110,8 @@
             $rol = $_POST['rol'];   
 
             $userModel->registrar($email, $nombre, $apellidos, $contraSegura, $rol);
-            header('Location: ./index.php?action=users');
+            header('Location: /index.php?action=users');
+			exit;
         }
 
         public function registrar(){
@@ -124,19 +126,29 @@
             $contraSegura= password_hash($password, PASSWORD_ARGON2ID);
 
             $userModel->registrar($email, $nombre, $apellidos, $contraSegura, 3);
-            $usuarioEntidad= $userModel->obtenerUsuarioEntidad($email, $contraSegura);
+            $usuarioEntidad= $userModel->obtenerUsuarioEntidad($email, $password);
+			if (!$usuarioEntidad) {
+                header('Location: ./index.php?action=home&error=registro');
+                return;
+            }
             $_SESSION['usuario_obj'] = serialize($usuarioEntidad);
             $userModel->usuario($this->usuarioActual()->getMail());
-            header('Location: ./index.php?action=perfil');
+            header('Location: /index.php?action=perfil');
+			exit;
         }
 
         public function editar(){
             $userModel= new UserModel();
+			$emailActual = $this->usuarioActual()->getMail();
             $email = $_POST['email'];
             $nombre = $_POST['nombre'];
             $apellidos = $_POST['apellidos'];
             $password = $_POST['password'];
             $rol = $_POST['rol'] ?? 3;
+			
+			if($email===$emailActual){
+               $rol="";
+            }
  
             if (!empty($password)) {
                 if(strlen($password)<8){
@@ -147,7 +159,8 @@
             } else {
                 $userModel->edit($email, $nombre, $apellidos, null, $rol);
             }
-            header('Location: ./index.php?action=users');
+            header('Location: /index.php?action=users');
+			exit;
         }
         public function borrar(){ 
             $userModel= new UserModel();
@@ -155,11 +168,12 @@
             $email=$_POST['email'];
 
             if($email===$emailActual){
-               header('Location: ./index.php?action=users&error=error');
+               header('Location: /index.php?action=users&error=error');
                 return;
             }
             $userModel->borrar($email); 
-            header('Location: ./index.php?action=users');
+            header('Location: /index.php?action=users');
+			exit;
         }
 
         public function cambiarTemp(){
@@ -172,7 +186,8 @@
             }
             $estancia = $_POST['estancia'];
             $graficsModel->nuevaTemp($nuevaTemp, $estancia);
-            header('Location: ./index.php?action=tempe');
+            header('Location: /index.php?action=tempe');
+			exit;
         }
 
         public function addtoGrupo($grupo){ 
@@ -180,7 +195,8 @@
             $estancia = $_POST['aula'];
             $grupoModel->addToGrupo($estancia,$grupo,$this->usuarioActual()->getMail());
             
-            header('Location: ./index.php?action=grafic');
+            header('Location: /index.php?action=grafic');
+			exit;
         }
 
         public function logout(){
@@ -190,7 +206,7 @@
                 setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
             }
             session_destroy();
-            header('Location: ./index.php?action=home');
+            header('Location: /index.php?action=home');
             exit;
         }
     }
